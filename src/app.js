@@ -10,7 +10,7 @@ const app = express();
 
 // middlewares =>
 app.use(cors({
-    origin: "https://video-app-frontend-one.vercel.app/",
+    origin: process.env.CORS_ORIGIN,
     credentials: true
 }))
 app.use(express.json({  }));
