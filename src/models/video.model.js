@@ -11,6 +11,10 @@ const videoSchema = new mongoose.Schema(
             type:String,
             required:true,
         },
+        ownerImg:{
+            type:String, // cloudinary link
+            required:true,
+        },
         videoFile:{  // cloudinary link
             type:String,
             required:true,
@@ -29,7 +33,7 @@ const videoSchema = new mongoose.Schema(
         },
         isPublished:{
             type:Boolean,
-            required:true,
+            default:true
         },
         tags:[
             {
@@ -59,7 +63,7 @@ const videoSchema = new mongoose.Schema(
             type:Number,
             required:true,
         },
-        region:{
+        location:{
             type:String,
             default:"India",
         },

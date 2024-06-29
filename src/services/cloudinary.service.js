@@ -14,12 +14,11 @@ const uploadOnCloudinary = async (localFilePath) => {
         const response = await cloudinary.uploader
             .upload(localFilePath, { resource_type: 'auto' });
         // uploaded successfully on cloudinary
-        fs.unlinkSync(localFilePath) 
         // remove file from server after uploading file on cloudinary.
+        fs.unlinkSync(localFilePath)   
         return response;
     } catch (error) {
         fs.unlinkSync(localFilePath)
-        // remove locally saved temporarily file from server as operation failed.
         return null;
     }
 }
@@ -37,4 +36,22 @@ const deleteVideoFromClodinary = async (filePublicId) => {
     }
 }
 
-export { uploadOnCloudinary ,  deleteVideoFromClodinary };
+const uploadImageOnCloudinary = async (localFilePath) => {
+    try {
+        // Upload an image
+     const uploadResult = await cloudinary.uploader
+     .upload(localFilePath,)
+     .catch((error) => {
+         console.log(error);
+         return null;
+     });
+     fs.unlinkSync(localFilePath) 
+     return uploadResult;  
+    } catch (error) {
+        console.log(error)
+        fs.unlinkSync(localFilePath) 
+        return null;
+    }
+}  
+
+export { uploadOnCloudinary ,  deleteVideoFromClodinary  , uploadImageOnCloudinary};

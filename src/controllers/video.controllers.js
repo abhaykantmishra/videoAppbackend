@@ -3,22 +3,25 @@ import Video from "../models/video.model.js";
 
 async function uploadVideo(req,res){
     try {
-        const user = req.user;
-        const owner = user;
-        const {title,description,tags,isPublised,category} = req.body;
+        const userFromfrontEnd = req.body?.user;
+        const user  = JSON.parse(userFromfrontEnd);
+        const owner = user._id
+        const {title,description,tags,isPublised,category,location} = req.body;
         if(!(title?.trim()))
             return res.status(400).json({
                 message:"title is required!"
             })
-        const files = req.files;
-        // console.log(files);
-        if(!(files.videoFile?.[0]))
+        const file = req.file;
+        console.log(file);
+        
+        if(!file){
             return res.status(400).json({
-                message:"video file is required!"
-            })
+                message:"video file is required"
+            }) 
+        }
         
         // uploading video file on cloudinary =>
-        const videoFilePath = files.videoFile?.[0].path;
+        const videoFilePath = file.path;
         const videoFile = await uploadOnCloudinary(videoFilePath);
         if(!videoFile)
             return res.status(500).json({
@@ -42,20 +45,22 @@ async function uploadVideo(req,res){
                 info:deleteFromClodinary
             })
         }
-
+        const allTags = tags[0].split(',');
         const uploadedVideo = await Video.create({
             owner:owner,
             ownerUsername:user.username,
+            ownerImg:user?.profileImg,
             videoFile:videoFile?.url,
             title:title,
             category:category,
             description:description,
             isPublished:isPublised,
-            tags:tags,
+            tags:allTags,
             size:(videoFile.bytes/(10**6)),
             duration:videoFile?.duration,
             cloudinaryPublicId:videoFile?.public_id,
-            videoRatio:videoFile?.video?.dar
+            videoRatio:videoFile?.video?.dar,
+            location:location,
         })
 
         if(!uploadedVideo)
@@ -108,9 +113,18 @@ async function deleteVideo(req,res){
     });
 }
 
-
+async function getAllVideos(req,res){
+    // const allVideos = await Video.aggregate(
+    //     [ { $sample: { size: 5 } } ]
+    //  )
+    const allVideos = await Video.find({});
+    return res.json({
+        allVideos:allVideos,
+    })
+}
 
 export {
     uploadVideo,
     deleteVideo,
+    getAllVideos,
 }

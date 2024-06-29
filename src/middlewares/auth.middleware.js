@@ -2,10 +2,12 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
 async function authUser(req,res,next){
-    const token = req.cookies?.accessToken;
+    console.log(req.body);
+    const token = req.body.token
+    console.log(token);
     if(!token){
         return res.status(401).json({
-            message:"Unauthorize access!"
+            message:"No token provided!"
         })
     }
     const decodedToken = jwt.verify(token,`${process.env.ACCESS_TOKEN_SECRET}`);
@@ -20,4 +22,4 @@ async function authUser(req,res,next){
 
     next();
 }
-export {authUser}
+export {authUser};

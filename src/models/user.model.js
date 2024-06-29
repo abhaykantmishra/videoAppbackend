@@ -17,8 +17,14 @@ const userSchema = new mongoose.Schema(
             type:String,
             required:true,
         },
-
-
+        name:{
+            type:String,
+            required:true,
+        },
+        profileImg:{
+            type:String, // cloudinary img url
+            default:'http://res.cloudinary.com/dcqgytpzz/image/upload/v1719572744/posmb21ih5ajzyxxrw3h.jpg',
+        },
     },
     {
         timestamps:true
