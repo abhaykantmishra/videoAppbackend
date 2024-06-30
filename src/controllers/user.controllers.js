@@ -20,7 +20,7 @@ async function registerUser(req,res){
         }
         
         // creating user =>
-        if(profileImg.trim() && isGuest){
+        if(profileImg && isGuest){
             const imguser = await User.create({
                 isGuest:isGuest,
                 name:name.trim(),
