@@ -1,7 +1,10 @@
 import express from "express";
 import {authUser} from "../middlewares/auth.middleware.js";
 import {upload} from "../middlewares/multer.middleware.js";
-import {uploadVideo ,deleteVideo , getAllVideos} from "../controllers/video.controllers.js"; 
+import {uploadVideo ,deleteVideo ,
+       getAllVideos , getVideoById,
+       likedByUser,unlikedByUser,checklike
+ } from "../controllers/video.controllers.js"; 
 
 const router = express.Router();    
 
@@ -12,5 +15,9 @@ router.route("/uploadVideo").post(
 router.route("/deleteVideo").delete( deleteVideo);
 
 router.route('/getallvideos').get(getAllVideos);
+router.route('/getvideobyid').post(getVideoById);
+router.route('/likedbyuser').post(likedByUser);
+router.route('/unlikedbyuser').post(unlikedByUser);
+router.route('/check-like').post(checklike);
 
 export default router;

@@ -38,13 +38,6 @@ async function uploadVideo(req,res){
             ratio:videoFile?.video?.dar
         }
 
-        if(videoInfo.ratio !== "9:16"){
-            const deleteFromClodinary = deleteVideoFromClodinary(videoInfo.cloudinaryPublicId);
-            return res.status(400).json({
-                msg:"video not uploaded due to not having 9:16 ratio!",
-                info:deleteFromClodinary
-            })
-        }
         const allTags = tags[0].split(',');
         const uploadedVideo = await Video.create({
             owner:owner,
@@ -59,7 +52,6 @@ async function uploadVideo(req,res){
             size:(videoFile.bytes/(10**6)),
             duration:videoFile?.duration,
             cloudinaryPublicId:videoFile?.public_id,
-            videoRatio:videoFile?.video?.dar,
             location:location,
         })
 
@@ -123,8 +115,94 @@ async function getAllVideos(req,res){
     })
 }
 
+async function getVideoById(req,res){
+    try {
+        const video = await Video.findById(req.body.videoId)
+        if(!video){
+            return res.status(500).json({
+                msg:"something went wrong!"
+            })
+        }
+        return res.status(200).json({
+            video:video,
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg:"wrong video id!"
+        })
+    }
+}
+
+async function likedByUser(req,res){
+    const userId = req.body.userId;
+    const vidId = req.body.videoId;
+    try {
+        const update = await Video.findByIdAndUpdate(vidId,{
+            $addToSet: { likedBy: userId }, 
+            $inc: { likes: 1 },
+        })
+        if(!update){
+            return res.status(400).json({
+                msg:"Got some error!"
+            })
+        }
+        return res.status(200).json({
+            msg:"updated Like"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg:"Got some error!"
+        })
+    }
+}
+
+async function unlikedByUser(req,res){
+    const userId = req.body.userId;
+    const vidId = req.body.videoId;
+    try {
+        const update = await Video.findByIdAndUpdate(vidId,{
+            $pull: { likedBy: userId }, 
+            $dec: { likes: 1 },
+        })
+        if(!update){
+            return res.status(400).json({
+                msg:"Got some error!"
+            })
+        }
+        return res.status(200).json({
+            msg:"updated Like"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg:"Got some error!"
+        })
+    }
+}
+
+async function checklike(req,res){
+    const userId = req.body.userId;
+    const videoId = req.body.videoId;
+    try {
+      const video = await Video.findById(videoId);
+      if (!video) {
+        return res.status(404).json({ message: 'Video not found' });
+      }
+      const isLiked = post.likedBy.includes(userId);
+       return res.status(200).json({ liked: isLiked });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+}
+    
+
 export {
     uploadVideo,
     deleteVideo,
     getAllVideos,
+    getVideoById,
+    unlikedByUser,
+    likedByUser,
+    checklike,
 }

@@ -5,7 +5,8 @@ import {deleteVideoFromClodinary,uploadImageOnCloudinary} from "../services/clou
 
 async function registerUser(req,res){
     try {
-        const {name, username , email , password} = req.body;
+        console.log(req.body);
+        const {name, username , email , password , profileImg,isGuest} = req.body;
         if(!(name.trim()) || !(username.trim()) || !(email.trim()) || !(password.trim())  ){
             return res.status(400).json({msg:"all fields are required!"})
         }
@@ -19,11 +20,28 @@ async function registerUser(req,res){
         }
         
         // creating user =>
+        if(profileImg.trim() && isGuest){
+            const imguser = await User.create({
+                isGuest:isGuest,
+                name:name.trim(),
+                username:username.trim(),
+                email:email.trim(),
+                password:password.trim(),
+                profileImg:profileImg.trim(),
+            })
+            if(!imguser){
+                return res.status(500).json({
+                    msg:"user didn't created!"
+                })}
+            return res.status(200).json({
+                msg:"user created successfully"
+            })
+        }
         const user = await User.create({
             name:name.trim(),
             username:username.trim(),
             email:email.trim(),
-            password:password.trim()
+            password:password.trim(),
         })
         if(!user){
             return res.status(500).json({
@@ -333,10 +351,24 @@ async function getAllUsers(req,res){
     }
 }
 
+async function getAllGuestUsers(req,res){
+   
+    const allGuestUsers = await User.find({isGuest:true});
+    if(!allGuestUsers){
+        return res.status(500).json({
+            msg:"some error accured while fetching guest users"
+        })
+    }
+    // console.log(allGuestUsers);
+    return res.status(200).json({
+        allGuestUsers:allGuestUsers
+    })
+}
+
 export {
     registerUser, loginUser, 
     logoutUser, changePassword,
     userChannel, deleteUser ,
     updateUserProfile ,getAnyUser,verifyUser,
-    getAllUsers,
+    getAllUsers,getAllGuestUsers,
 }

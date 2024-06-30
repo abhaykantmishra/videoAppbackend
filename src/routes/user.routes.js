@@ -6,8 +6,8 @@ import {registerUser, loginUser,
         logoutUser, changePassword,
         userChannel, deleteUser,
         updateUserProfile ,getAnyUser,
-        verifyUser,getAllUsers
-
+        verifyUser,getAllUsers,
+        getAllGuestUsers
         } from "../controllers/user.controllers.js";
 
 import {authUser} from "../middlewares/auth.middleware.js";
@@ -25,4 +25,5 @@ userRouter.route("/deleteAccount").delete(authUser , deleteUser);
 userRouter.route('/getanyuser').post(getAnyUser);
 userRouter.route('/verifyuser').post(verifyUser);
 userRouter.route('/allusers').get(getAllUsers);
+userRouter.route('/getguestusers').get(getAllGuestUsers);
 export default userRouter;

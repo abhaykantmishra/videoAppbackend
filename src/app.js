@@ -10,7 +10,7 @@ const app = express();
 
 // middlewares =>
 app.use(cors({
-    origin: "https://video-app-frontend-one.vercel.app/",
+    origin: process.env.CORS_ORIGIN,
     credentials: true
 }))
 app.use(express.json({  }));
@@ -21,9 +21,9 @@ app.use(cookieParser());
 app.get('/' , (req,res) => {
     res.send("Welcome to Homepage!");
 })
-app.use('/api/v1' , )
+
 app.use('/api/v1/user' , userRouter);
 app.use('/api/v1/video' , videoRouter);
 // app.use('/api/v1/comment' , commentRouter);
 
-export default app;
+export default app
