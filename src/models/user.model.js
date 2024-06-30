@@ -3,6 +3,10 @@ import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
     {
+        isGuest:{
+            type:Boolean,
+            default:false,
+        },
         username:{
             type:String,
             unique:true,
