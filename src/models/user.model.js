@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
             type:String, // cloudinary img url
             default:'http://res.cloudinary.com/dcqgytpzz/image/upload/v1719572744/posmb21ih5ajzyxxrw3h.jpg',
         },
+        savedVideos:[
+            {
+                type:mongoose.Schema.Types.ObjectId, 
+                ref: 'Video',
+            }
+        ]
     },
     {
         timestamps:true

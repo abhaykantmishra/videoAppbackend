@@ -163,7 +163,7 @@ async function unlikedByUser(req,res){
     try {
         const update = await Video.findByIdAndUpdate(vidId,{
             $pull: { likedBy: userId }, 
-            $dec: { likes: 1 },
+            $inc: { likes: -1 },
         })
         if(!update){
             return res.status(400).json({
@@ -184,18 +184,47 @@ async function unlikedByUser(req,res){
 async function checklike(req,res){
     const userId = req.body.userId;
     const videoId = req.body.videoId;
+    // console.log(videoId);
+    // console.log(userId,' ',videoId)
     try {
       const video = await Video.findById(videoId);
+    //   console.log(video);
       if (!video) {
         return res.status(404).json({ message: 'Video not found' });
       }
-      const isLiked = post.likedBy.includes(userId);
+      const isLiked = video?.likedBy?.includes(userId);
        return res.status(200).json({ liked: isLiked });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Server Error' });
     }
 }
     
+async function getVideosByIdArray(req,res){
+    try {
+        const idArray = req.body.Ids;
+        const videos = await Video.find({_id:idArray})
+        return res.status(200).json({
+            videos:videos
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            msg:"something went wrong while fetching videos!"
+        })
+    }
+}
+
+async function getQueryVideos(req,res){
+    const query = req.body.query;
+    // console.log(query);
+    const videos = await Video.find({
+        $or:[{ownerUsername:query},{category:query},{tags:query}]
+    })
+    return res.status(200).json({
+        videos:videos
+    })
+}
 
 export {
     uploadVideo,
@@ -205,4 +234,6 @@ export {
     unlikedByUser,
     likedByUser,
     checklike,
+    getVideosByIdArray,
+    getQueryVideos,
 }
