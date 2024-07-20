@@ -7,10 +7,13 @@ import {registerUser, loginUser,
         userChannel, deleteUser,
         updateUserProfile ,getAnyUser,
         verifyUser,getAllUsers,
-        getAllGuestUsers
+        checkSaved,
+        savedByUser,
+        getAllGuestUsers,
+        unSavedByUser,getSavedVideos
         } from "../controllers/user.controllers.js";
 
-import {authUser} from "../middlewares/auth.middleware.js";
+import {authUser,verifyToken} from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
 
@@ -26,4 +29,11 @@ userRouter.route('/getanyuser').post(getAnyUser);
 userRouter.route('/verifyuser').post(verifyUser);
 userRouter.route('/allusers').get(getAllUsers);
 userRouter.route('/getguestusers').get(getAllGuestUsers);
+
+userRouter.route('/check-saved').post(checkSaved);
+userRouter.route('/savedbyuser').post(savedByUser);
+userRouter.route('/unsavedbyuser').post(unSavedByUser);
+userRouter.route('/getsavedvideos').post(verifyToken,getSavedVideos)
+
+
 export default userRouter;

@@ -26,5 +26,4 @@ app.use('/api/v1/user' , userRouter);
 app.use('/api/v1/video' , videoRouter);
 // app.use('/api/v1/comment' , commentRouter);
 
-
-export default app
+export default app;

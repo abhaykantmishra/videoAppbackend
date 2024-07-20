@@ -365,10 +365,102 @@ async function getAllGuestUsers(req,res){
     })
 }
 
+async function checkSaved(req,res){
+    const userId = req.body.userId;
+    const videoId = req.body.videoId;
+    try {
+      const user = await User.findById(req.body.userId);
+    
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const isSaved = user.savedVideos.includes(videoId);
+       return res.status(200).json({ saved: isSaved });
+    } catch (error) {
+        res.status(500).json({ message: 'Back-end Server Error!' });
+    }
+}
+
+async function savedByUser(req,res){
+    const userId = req.body.userId;
+    const vidId = req.body.videoId;
+    try {
+        const update = await User.findByIdAndUpdate(userId,{
+            $addToSet: { savedVideos: vidId }, 
+        })
+        if(!update){
+            return res.status(400).json({
+                msg:"Got some error!"
+            })
+        }
+        return res.status(200).json({
+            msg:"updated saved videos"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg:"Got some error, while saving video!"
+        })
+    }
+}
+
+async function unSavedByUser(req,res){
+    const userId = req.body.userId;
+    const vidId = req.body.videoId;
+    try {
+        const update = await User.findByIdAndUpdate(userId,{
+            $pull: { savedVideos: vidId }, 
+        })
+        if(!update){
+            return res.status(400).json({
+                msg:"Got some error!"
+            })
+        }
+        return res.status(200).json({
+            msg:"updated saved videos"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg:"Got some error!"
+        })
+    }
+}
+
+async function getSavedVideos(req,res){
+    const userId = req.body.userId;
+    
+    try {
+        const usr = await User.findById(userId);
+        if(!usr) {
+            return res.status(404).json({
+                msg:"user not found!"
+            }) 
+        }
+        const savedVideos = usr.savedVideos;
+        if(!savedVideos){
+            return res.status(404).json({
+                msg:"saved videos not found!"
+            })  
+        }
+        return res.status(200).json({
+            savedVideos:savedVideos
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg:"Got some error!"
+        })
+    }
+}
+
 export {
     registerUser, loginUser, 
     logoutUser, changePassword,
     userChannel, deleteUser ,
     updateUserProfile ,getAnyUser,verifyUser,
+    getAllUsers,getAllGuestUsers,checkSaved,
+    savedByUser,unSavedByUser,getSavedVideos,
     getAllUsers,getAllGuestUsers,
 }
+

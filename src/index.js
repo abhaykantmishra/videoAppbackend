@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 // connecting mongo-db =>
 const mongoDB_uri = `${process.env.MONGODB_URI}/${DB_NAME}`
+
 connectDB(mongoDB_uri)
 .then(() => {
     app.listen(PORT , ()=>{
