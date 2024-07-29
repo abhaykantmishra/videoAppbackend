@@ -372,12 +372,12 @@ async function checkSaved(req,res){
       const user = await User.findById(req.body.userId);
     
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ msg: 'User not found' });
       }
       const isSaved = user.savedVideos.includes(videoId);
        return res.status(200).json({ saved: isSaved });
     } catch (error) {
-        res.status(500).json({ message: 'Back-end Server Error!' });
+        res.status(500).json({ msg: 'Back-end Server Error!' });
     }
 }
 
@@ -441,7 +441,7 @@ async function getSavedVideos(req,res){
         if(!savedVideos){
             return res.status(404).json({
                 msg:"saved videos not found!"
-            })  
+            })
         }
         return res.status(200).json({
             savedVideos:savedVideos
