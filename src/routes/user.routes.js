@@ -33,7 +33,7 @@ userRouter.route('/getguestusers').get(getAllGuestUsers);
 userRouter.route('/check-saved').post(checkSaved);
 userRouter.route('/savedbyuser').post(savedByUser);
 userRouter.route('/unsavedbyuser').post(unSavedByUser);
-userRouter.route('/getsavedvideos').post(verifyToken,getSavedVideos)
+userRouter.route('/getsavedvideos').post(getSavedVideos);
 
 
 export default userRouter;
